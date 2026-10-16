@@ -13,7 +13,7 @@
   --border: #dce5ed;
   --surface: #ffffff;
 }
-.google-ads-page body { margin: 0; min-width: 320px; min-height: 100vh; }
+.google-ads-page { margin: 0; min-width: 320px; min-height: 100vh; }
 .google-ads-page button, .google-ads-page input, .google-ads-page textarea { font: inherit; }
 .google-ads-page button { cursor: pointer; }
 .google-ads-page button:focus-visible, .google-ads-page input:focus-visible, .google-ads-page textarea:focus-visible { outline: 3px solid #37C6D066; outline-offset: 3px; }
