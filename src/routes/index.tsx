@@ -223,8 +223,7 @@ function GoogleAdsBriefingPage() {
           return;
         }
         console.error("Falha ao enviar briefing:", insertError.code, insertError.message);
-        throw new Error("Não foi possível salvar as respostas. Confira sua conexão e tente novamente. Se o erro continuar, entre em contato com a Dufri.");
-      }
+throw new Error(`Erro ao salvar: ${insertError.code} - ${insertError.message}`);      }
       setScreen("success");
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : "Ocorreu um erro ao enviar. Tente novamente.");
