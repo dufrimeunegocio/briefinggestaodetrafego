@@ -290,6 +290,7 @@ function GoogleAdsBriefingPage() {
           <div className="success-note"><CheckCircle2 size={19} /> Suas respostas foram enviadas com sucesso.</div>
         </section>
       </main>
+      </div>
     );
   }
 
@@ -321,6 +322,7 @@ function GoogleAdsBriefingPage() {
           <p className="secure-footnote"><LockKeyhole size={14} /> Não compartilhe senhas ou códigos de autenticação neste formulário.</p>
         </section>
       </main>
+      </div>
     );
   }
 
@@ -372,5 +374,6 @@ function GoogleAdsBriefingPage() {
         </section>
       </section>
     </main>
+    </div>
   );
 }
