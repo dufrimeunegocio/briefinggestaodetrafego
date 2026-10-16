@@ -19,6 +19,11 @@ export const Route = createFileRoute("/")({
       { title: "Briefing de Google Ads | Dufri Meu Negócio" },
       { name: "description", content: "Conte-nos sobre seu negócio para planejarmos sua campanha de Google Ads." },
     ],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700&display=swap" },
+    ],
   }),
   component: GoogleAdsBriefingPage,
 });
@@ -347,7 +352,7 @@ function GoogleAdsBriefingPage() {
           <span className="eyebrow">Pergunta {currentIndex + 1}</span>
           <h1>{question?.title}</h1>
           {question?.description && <p className="question-description">{question.description}</p>}
-          {question?.optional && <p className="optional-label">Campo opcional</p>}
+          {question?.optional ? <p className="optional-label">Campo opcional</p> : <p className="required-label">Campo obrigatório</p>}
           {question?.type === "radio" ? (
             <div className="radio-list" role="radiogroup" aria-label={question.title}>
               {question.options?.map((option) => (

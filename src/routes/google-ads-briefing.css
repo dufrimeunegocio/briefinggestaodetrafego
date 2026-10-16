@@ -70,6 +70,7 @@
 .google-ads-page .question-content h1 { margin: 18px 0 14px; font-size: clamp(1.75rem, 3.6vw, 2.65rem); }
 .google-ads-page .question-description { margin-bottom: 1.5rem; color: var(--muted); font-size: .94rem; line-height: 1.75; }
 .google-ads-page .optional-label { margin: -3px 0 14px; color: #668072; font-size: .78rem; font-weight: 700; }
+.google-ads-page .required-label { margin: -3px 0 14px; color: #6f8090; font-size: .78rem; font-weight: 700; }
 .google-ads-page .answer-field { width: 100%; min-height: 58px; padding: 15px 16px; border: 1px solid #ccd9e3; border-radius: 7px; color: #18344d; background: #fff; font-size: 1rem; line-height: 1.6; transition: border-color .18s ease, box-shadow .18s ease; }
 .google-ads-page .answer-field::placeholder { color: #95a4b2; }
 .google-ads-page .answer-field:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 4px #37c6d022; }
