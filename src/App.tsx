@@ -131,7 +131,18 @@ export default function App() {
   }, [answers, screen]);
 
   function setAnswer(key: string, nextValue: string) {
-    setAnswers((previous) => ({ ...previous, [key]: nextValue }));
+    setAnswers((previous) => {
+      const updated = { ...previous, [key]: nextValue };
+      for (const conditionalQuestion of questions) {
+        if (
+          conditionalQuestion.showIf?.key === key &&
+          !conditionalQuestion.showIf.values.includes(nextValue)
+        ) {
+          updated[conditionalQuestion.key] = "";
+        }
+      }
+      return updated;
+    });
     setError("");
   }
 
@@ -290,7 +301,7 @@ export default function App() {
             </section>
           ))}
           <div className="review-actions">
-            <button className="button button-secondary" onClick={() => { setScreen("form"); setStepIndex(Math.max(0, visibleQuestions.length - 1)); }}><ArrowLeft size={18} /> Voltar às perguntas</button>
+            <button className="button button-secondary" onClick={() => { setScreen("form"); setStepIndex(0); }}><ArrowLeft size={18} /> Voltar às perguntas</button>
             <button className="button button-primary" disabled={saving} onClick={submit}>{saving ? "Enviando..." : "Enviar briefing"} <ArrowRight size={18} /></button>
           </div>
           {error && <p className="error-message" role="alert">{error}</p>}
