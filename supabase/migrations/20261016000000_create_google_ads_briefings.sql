@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS public.google_ads_briefings (
 ALTER TABLE public.google_ads_briefings ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON TABLE public.google_ads_briefings FROM anon, authenticated;
 GRANT INSERT ON TABLE public.google_ads_briefings TO anon, authenticated;
-GRANT SELECT ON TABLE public.google_ads_briefings TO authenticated;
 GRANT ALL ON TABLE public.google_ads_briefings TO service_role;
 
 DROP POLICY IF EXISTS "Public can submit Google Ads briefings" ON public.google_ads_briefings;
@@ -23,11 +22,8 @@ CREATE POLICY "Public can submit Google Ads briefings"
   FOR INSERT TO anon, authenticated
   WITH CHECK (true);
 
-DROP POLICY IF EXISTS "Admins can view Google Ads briefings" ON public.google_ads_briefings;
-CREATE POLICY "Admins can view Google Ads briefings"
-  ON public.google_ads_briefings
-  FOR SELECT TO authenticated
-  USING (public.is_briefing_admin());
+-- Leitura dos briefings fica restrita ao painel administrativo do Supabase
+-- até existir uma regra de autorização de administradores validada.
 
 CREATE OR REPLACE FUNCTION public.validate_google_ads_briefing_submission()
 RETURNS TRIGGER
