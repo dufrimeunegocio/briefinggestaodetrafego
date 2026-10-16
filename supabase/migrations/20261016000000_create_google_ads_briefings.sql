@@ -126,36 +126,7 @@ BEGIN
   END IF;
 
   IF NULLIF(BTRIM(NEW.answers ->> 'website'), '') IS NOT NULL
-     AND BTRIM(NEW.answers ->> 'website') !~* '^(https?://)?([[:alnum:]-]+\.)+[[:alpha:]]{2,}([/?#][^[:space:]]*)?
-  FOR answer_item IN SELECT key, value FROM jsonb_each(NEW.answers) LOOP
-    IF jsonb_typeof(answer_item.value) IS DISTINCT FROM 'string' THEN
-      RAISE EXCEPTION 'Cada resposta deve ser texto.' USING ERRCODE = '22023';
-    END IF;
-    IF LENGTH(answer_item.value #>> '{}') > 5000 THEN
-      RAISE EXCEPTION 'Uma das respostas excede o limite permitido.' USING ERRCODE = '22023';
-    END IF;
-  END LOOP;
-
-  IF OCTET_LENGTH(NEW.answers::TEXT) > 60000 THEN
-    RAISE EXCEPTION 'O tamanho total das respostas excede o limite permitido.' USING ERRCODE = '22023';
-  END IF;
-
-  -- O servidor define os campos de controle; o cliente não pode forjá-los.
-  NEW.full_name := BTRIM(NEW.answers ->> 'fullName');
-  NEW.business_name := BTRIM(NEW.answers ->> 'businessName');
-  NEW.email := LOWER(BTRIM(NEW.answers ->> 'email'));
-  NEW.status := 'Novo';
-  NEW.submitted_at := now();
-  NEW.created_at := now();
-  RETURN NEW;
-END;
-$$;
-
-DROP TRIGGER IF EXISTS validate_google_ads_briefing_submission ON public.google_ads_briefings;
-CREATE TRIGGER validate_google_ads_briefing_submission
-  BEFORE INSERT ON public.google_ads_briefings
-  FOR EACH ROW EXECUTE FUNCTION public.validate_google_ads_briefing_submission();
- THEN
+     AND BTRIM(NEW.answers ->> 'website') !~* '^(https?://)?([[:alnum:]-]+\.)+[[:alpha:]]{2,}([/?#][^[:space:]]*)?$' THEN
     RAISE EXCEPTION 'Endereço do site inválido.' USING ERRCODE = '22023';
   END IF;
 
