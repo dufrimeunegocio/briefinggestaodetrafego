@@ -91,6 +91,74 @@ BEGIN
     RAISE EXCEPTION 'Faixa de orçamento inválida.' USING ERRCODE = '22023';
   END IF;
 
+  IF NEW.answers ->> 'availability' NOT IN ('Sim', 'Não no momento', 'Tenho disponibilidade limitada') THEN
+    RAISE EXCEPTION 'Disponibilidade inválida.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'hasGoogleAds' NOT IN ('Sim', 'Não') THEN
+    RAISE EXCEPTION 'Resposta sobre histórico do Google Ads inválida.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'hasGoogleAdsAccount' NOT IN ('Sim', 'Não', 'Não sei') THEN
+    RAISE EXCEPTION 'Resposta sobre a conta do Google Ads inválida.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'adminSiteAccess' NOT IN ('Sim', 'Não', 'Não se aplica', 'Não sei') THEN
+    RAISE EXCEPTION 'Resposta sobre acesso ao site inválida.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'adDestination' NOT IN (
+    'Site', 'Página de destino específica', 'WhatsApp', 'Ligações',
+    'Ainda preciso de orientação'
+  ) THEN
+    RAISE EXCEPTION 'Destino dos anúncios inválido.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'conversionTracking' NOT IN ('Sim', 'Não', 'Não sei') THEN
+    RAISE EXCEPTION 'Resposta sobre acompanhamento de conversões inválida.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NEW.answers ->> 'startWhen' NOT IN (
+    'Assim que possível', 'Nas próximas 1 a 2 semanas',
+    'Em até 30 dias', 'Ainda estou avaliando'
+  ) THEN
+    RAISE EXCEPTION 'Prazo de início inválido.' USING ERRCODE = '22023';
+  END IF;
+
+  IF NULLIF(BTRIM(NEW.answers ->> 'website'), '') IS NOT NULL
+     AND BTRIM(NEW.answers ->> 'website') !~* '^(https?://)?([[:alnum:]-]+\.)+[[:alpha:]]{2,}([/?#][^[:space:]]*)?
+  FOR answer_item IN SELECT key, value FROM jsonb_each(NEW.answers) LOOP
+    IF jsonb_typeof(answer_item.value) IS DISTINCT FROM 'string' THEN
+      RAISE EXCEPTION 'Cada resposta deve ser texto.' USING ERRCODE = '22023';
+    END IF;
+    IF LENGTH(answer_item.value #>> '{}') > 5000 THEN
+      RAISE EXCEPTION 'Uma das respostas excede o limite permitido.' USING ERRCODE = '22023';
+    END IF;
+  END LOOP;
+
+  IF OCTET_LENGTH(NEW.answers::TEXT) > 60000 THEN
+    RAISE EXCEPTION 'O tamanho total das respostas excede o limite permitido.' USING ERRCODE = '22023';
+  END IF;
+
+  -- O servidor define os campos de controle; o cliente não pode forjá-los.
+  NEW.full_name := BTRIM(NEW.answers ->> 'fullName');
+  NEW.business_name := BTRIM(NEW.answers ->> 'businessName');
+  NEW.email := LOWER(BTRIM(NEW.answers ->> 'email'));
+  NEW.status := 'Novo';
+  NEW.submitted_at := now();
+  NEW.created_at := now();
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS validate_google_ads_briefing_submission ON public.google_ads_briefings;
+CREATE TRIGGER validate_google_ads_briefing_submission
+  BEFORE INSERT ON public.google_ads_briefings
+  FOR EACH ROW EXECUTE FUNCTION public.validate_google_ads_briefing_submission();
+ THEN
+    RAISE EXCEPTION 'Endereço do site inválido.' USING ERRCODE = '22023';
+  END IF;
+
   FOR answer_item IN SELECT key, value FROM jsonb_each(NEW.answers) LOOP
     IF jsonb_typeof(answer_item.value) IS DISTINCT FROM 'string' THEN
       RAISE EXCEPTION 'Cada resposta deve ser texto.' USING ERRCODE = '22023';
