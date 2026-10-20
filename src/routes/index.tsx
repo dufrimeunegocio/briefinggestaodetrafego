@@ -211,9 +211,9 @@ function GoogleAdsBriefingPage() {
     try {
       const { error: insertError } = await supabase.from("google_ads_briefings").insert({
         submission_token: submissionToken,
-        full_name: (answers.fullName || "").trim(),
-        business_name: (answers.businessName || "").trim(),
-        email: (answers.email || "").trim(),
+        full_name: (answers["fullName"] || "").trim(),
+        business_name: (answers["businessName"] || "").trim(),
+        email: (answers["email"] || "").trim(),
         answers,
       });
 
