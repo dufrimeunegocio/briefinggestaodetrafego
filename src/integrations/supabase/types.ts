@@ -14,7 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      google_ads_briefings: {
+        Row: {
+          answers: Json
+          business_name: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          status: string
+          submission_token: string
+          submitted_at: string
+        }
+        Insert: {
+          answers: Json
+          business_name: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          status?: string
+          submission_token: string
+          submitted_at?: string
+        }
+        Update: {
+          answers?: Json
+          business_name?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          status?: string
+          submission_token?: string
+          submitted_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
